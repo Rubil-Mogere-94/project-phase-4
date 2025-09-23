@@ -17,7 +17,7 @@ const Dashboard = () => {
       <div className="flex-1 p-6 max-w-7xl mx-auto">
         {/* Header */}
         <header className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-400 mb-2">www.nickelfox.com</h1>
+          <h1 className="text-3xl font-bold text-gray-400 mb-2">ishop4u</h1>
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-semibold text-gray-800">Today's Shipment</h2>
             <div className="text-sm text-gray-500">
