@@ -1,10 +1,22 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { User, Trophy, ShoppingBag, Package, BarChart2, MessageSquare, 
          Settings, Heart, History, LogOut } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
 
 const Sidebar = () => {
   const location = useLocation();
+  const { logout, currentUser } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/login');
+    } catch (error) {
+      console.error('Failed to log out', error);
+    }
+  };
 
   const navItems = [
     { name: "Dashboard", icon: <User size={20} />, path: "/" },
@@ -23,11 +35,16 @@ const Sidebar = () => {
         <div className="flex items-center space-x-3">
           <div className="avatar">
             <div className="w-12 rounded-full ring ring-primary ring-offset-gray-800 ring-offset-2">
-              <img src="https://i.pravatar.cc/100?img=12" alt="Profile" />
+              <img 
+                src={currentUser?.photoURL || "https://i.pravatar.cc/100?img=12"} 
+                alt="Profile" 
+              />
             </div>
           </div>
           <div>
-            <h2 className="font-bold text-lg">James</h2>
+            <h2 className="font-bold text-lg">
+              {currentUser?.displayName || currentUser?.email || "User"}
+            </h2>
             <p className="text-sm text-gray-400">User</p>
           </div>
         </div>
@@ -49,7 +66,10 @@ const Sidebar = () => {
 
       {/* Sign Out */}
       <div className="p-4 border-t border-gray-700">
-        <button className="flex items-center gap-3 p-3 rounded-lg w-full text-left hover:bg-red-600 transition-colors duration-200 text-red-400 font-semibold">
+        <button 
+          onClick={handleLogout}
+          className="flex items-center gap-3 p-3 rounded-lg w-full text-left hover:bg-red-600 transition-colors duration-200 text-red-400 font-semibold"
+        >
           <LogOut size={20} /> <span>Sign Out</span>
         </button>
       </div>
@@ -58,4 +78,3 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-
