@@ -27,8 +27,8 @@ const Sidebar = () => {
             </div>
           </div>
           <div>
-            <h2 className="font-bold text-lg">John Doe</h2>
-            <p className="text-sm text-gray-400">Admin</p>
+            <h2 className="font-bold text-lg">James</h2>
+            <p className="text-sm text-gray-400">User</p>
           </div>
         </div>
       </div>
