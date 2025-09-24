@@ -1,64 +1,61 @@
-import React from "react"
+import React from "react";
+import { Link, useLocation } from "react-router-dom";
 import { User, Trophy, ShoppingBag, Package, BarChart2, MessageSquare, 
-         Settings, Heart, History, LogOut } from "lucide-react"
+         Settings, Heart, History, LogOut } from "lucide-react";
 
 const Sidebar = () => {
+  const location = useLocation();
+
+  const navItems = [
+    { name: "Dashboard", icon: <User size={20} />, path: "/" },
+    { name: "Top Products", icon: <Package size={20} />, path: "/products" },
+    { name: "Shipment Summary", icon: <ShoppingBag size={20} />, path: "/shipments" },
+    { name: "Items Shipped", icon: <BarChart2 size={20} />, path: "/items-shipped" },
+    { name: "Level Comparison", icon: <Trophy size={20} />, path: "/level-comparison" },
+    { name: "Donut Chart", icon: <Heart size={20} />, path: "/donut-chart" },
+    { name: "Sales Graph", icon: <MessageSquare size={20} />, path: "/sales-graph" },
+  ];
+
   return (
-    <div className="w-64 min-h-screen bg-base-200 shadow-lg flex flex-col">
+    <div className="w-64 min-h-screen bg-gray-800 text-white shadow-lg flex flex-col">
       {/* Profile section */}
-      <div className="p-6 border-b border-base-300">
+      <div className="p-6 border-b border-gray-700">
         <div className="flex items-center space-x-3">
           <div className="avatar">
-            <div className="w-12 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+            <div className="w-12 rounded-full ring ring-primary ring-offset-gray-800 ring-offset-2">
               <img src="https://i.pravatar.cc/100?img=12" alt="Profile" />
             </div>
           </div>
           <div>
             <h2 className="font-bold text-lg">John Doe</h2>
-            <p className="text-sm text-gray-500">Admin</p>
+            <p className="text-sm text-gray-400">Admin</p>
           </div>
         </div>
       </div>
 
-      {/* Nav Links */}
+      {/* Navigation links */}
       <nav className="flex-1 p-4 space-y-2">
-        <a href="#" className="flex items-center gap-3 p-3 rounded-lg hover:bg-base-300">
-          <User size={20} /> <span>Profile</span>
-        </a>
-        <a href="#" className="flex items-center gap-3 p-3 rounded-lg hover:bg-base-300">
-          <Trophy size={20} /> <span>Leaderboard</span>
-        </a>
-        <a href="#" className="flex items-center gap-3 p-3 rounded-lg hover:bg-base-300">
-          <ShoppingBag size={20} /> <span>Order</span>
-        </a>
-        <a href="#" className="flex items-center gap-3 p-3 rounded-lg hover:bg-base-300">
-          <Package size={20} /> <span>Products</span>
-        </a>
-        <a href="#" className="flex items-center gap-3 p-3 rounded-lg hover:bg-base-300">
-          <BarChart2 size={20} /> <span>Progress Bar</span>
-        </a>
-        <a href="#" className="flex items-center gap-3 p-3 rounded-lg hover:bg-base-300">
-          <MessageSquare size={20} /> <span>Messages</span>
-        </a>
-        <a href="#" className="flex items-center gap-3 p-3 rounded-lg hover:bg-base-300">
-          <Settings size={20} /> <span>Settings</span>
-        </a>
-        <a href="#" className="flex items-center gap-3 p-3 rounded-lg hover:bg-base-300">
-          <Heart size={20} /> <span>Favourites</span>
-        </a>
-        <a href="#" className="flex items-center gap-3 p-3 rounded-lg hover:bg-base-300">
-          <History size={20} /> <span>History</span>
-        </a>
+        {navItems.map((item) => (
+          <Link
+            key={item.name}
+            to={item.path}
+            className={`flex items-center gap-3 p-3 rounded-lg w-full text-left transition-colors duration-200
+              ${location.pathname === item.path ? "bg-gray-700" : "hover:bg-gray-600"}`}
+          >
+            {item.icon} <span>{item.name}</span>
+          </Link>
+        ))}
       </nav>
 
-      {/* Sign out */}
-      <div className="p-4 border-t border-base-300">
-        <a href="#" className="flex items-center gap-3 p-3 rounded-lg hover:bg-red-100 text-red-600 font-semibold">
+      {/* Sign Out */}
+      <div className="p-4 border-t border-gray-700">
+        <button className="flex items-center gap-3 p-3 rounded-lg w-full text-left hover:bg-red-600 transition-colors duration-200 text-red-400 font-semibold">
           <LogOut size={20} /> <span>Sign Out</span>
-        </a>
+        </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;
+
