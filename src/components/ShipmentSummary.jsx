@@ -12,7 +12,7 @@ const ShipmentSummary = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/shipment_summary');
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/shipment_summary`);
         setSummary(response.data);
       } catch (err) {
         setError(err.message);

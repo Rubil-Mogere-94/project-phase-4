@@ -12,7 +12,7 @@ const LevelComparison = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/delivery_comparison');
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/delivery_comparison`);
         setComparison(response.data);
       } catch (err) {
         setError(err.message);

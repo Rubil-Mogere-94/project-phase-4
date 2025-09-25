@@ -14,7 +14,7 @@ const DonutChart = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/category_distribution');
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/category_distribution`);
         const formattedData = response.data.map((item, index) => ({ ...item, color: COLORS[index % COLORS.length] }));
         setData(formattedData);
       } catch (err) {

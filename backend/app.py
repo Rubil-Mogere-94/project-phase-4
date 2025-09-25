@@ -3,12 +3,15 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import requests
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
 
 # Database Configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ishop4u.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -361,5 +364,4 @@ def delete_cart_item(item_id):
     db.session.commit()
     return jsonify({"message": "Cart item removed"})
 
-if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+

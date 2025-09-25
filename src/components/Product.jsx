@@ -15,7 +15,7 @@ const Product = () => {
       setError(null);
       try {
         const response = await axios.get(
-          `http://127.0.0.1:5000/api/products?source=${source}`
+          `${import.meta.env.VITE_API_URL}/api/products?source=${source}`
         );
         setProducts(response.data);
       } catch (err) {

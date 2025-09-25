@@ -12,7 +12,7 @@ const ItemsShipped = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await axios.get('http://127.0.0.1:5000/api/shipment_summary');
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/shipment_summary`);
         // Extract the numeric value from the formatted string
         const numericValue = parseFloat(response.data.total_shipment.replace(/[^\d.-]/g, ''));
         setShippedValue(numericValue);

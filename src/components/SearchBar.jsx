@@ -17,7 +17,7 @@ export const SearchBar = () => {
     setError(null);
     
     try {
-      const response = await fetch(`http://127.0.0.1:5000/api/products?query=${encodeURIComponent(query)}&source=${searchSource}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products?query=${encodeURIComponent(query)}&source=${searchSource}`);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }

@@ -15,7 +15,7 @@ export const CartProvider = ({ children }) => {
   const fetchCart = async () => {
     if (currentUser && currentUser.uid) {
       try {
-        const response = await axios.get(`http://127.0.0.1:5000/api/cart?user_id=${currentUser.uid}`);
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/cart?user_id=${currentUser.uid}`);
         setCartItems(response.data);
       } catch (error) {
         console.error("Error fetching cart:", error);
@@ -35,7 +35,7 @@ export const CartProvider = ({ children }) => {
       return;
     }
     try {
-      const response = await axios.post('http://127.0.0.1:5000/api/cart', {
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/cart`, {
         product_id: product.id,
         user_id: currentUser.uid,
         quantity: 1,
@@ -55,7 +55,7 @@ export const CartProvider = ({ children }) => {
       return;
     }
     try {
-      const response = await axios.put(`http://127.0.0.1:5000/api/cart/${cartItemId}`, {
+      const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/cart/${cartItemId}`, {
         quantity: newQuantity,
       });
       if (response.status === 200) {
@@ -72,7 +72,7 @@ export const CartProvider = ({ children }) => {
       return;
     }
     try {
-      const response = await axios.put(`http://127.0.0.1:5000/api/cart/${cartItemId}`, {
+      const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/cart/${cartItemId}`, {
         notes: newNotes,
       });
       if (response.status === 200) {
@@ -89,7 +89,7 @@ export const CartProvider = ({ children }) => {
       return;
     }
     try {
-      const response = await axios.delete(`http://127.0.0.1:5000/api/cart/${cartItemId}`);
+      const response = await axios.delete(`${import.meta.env.VITE_API_URL}/api/cart/${cartItemId}`);
       if (response.status === 200) {
         fetchCart(); // Refresh cart after removing item
       }
