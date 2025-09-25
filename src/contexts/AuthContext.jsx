@@ -1,3 +1,4 @@
+// contexts/AuthContext.jsx
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { auth } from '../firebase/config';
 import { 
@@ -6,7 +7,8 @@ import {
   signOut, 
   onAuthStateChanged,
   sendPasswordResetEmail,
-  updateProfile 
+  updateProfile,
+  sendEmailVerification
 } from 'firebase/auth';
 
 const AuthContext = createContext();
@@ -19,8 +21,21 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  function signup(email, password) {
-    return createUserWithEmailAndPassword(auth, email, password);
+  async function signup(email, password, displayName) {
+    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    const user = userCredential.user;
+    
+    // Update profile with display name
+    if (displayName) {
+      await updateProfile(user, {
+        displayName: displayName
+      });
+    }
+    
+    // Send email verification
+    await sendEmailVerification(user);
+    
+    return userCredential;
   }
 
   function login(email, password) {
@@ -39,6 +54,10 @@ export function AuthProvider({ children }) {
     return updateProfile(auth.currentUser, profile);
   }
 
+  function resendEmailVerification() {
+    return sendEmailVerification(auth.currentUser);
+  }
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
@@ -54,7 +73,8 @@ export function AuthProvider({ children }) {
     login,
     logout,
     resetPassword,
-    updateUserProfile
+    updateUserProfile,
+    resendEmailVerification
   };
 
   return (

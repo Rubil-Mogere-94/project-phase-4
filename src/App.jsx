@@ -12,6 +12,7 @@ import SalesGraphPage from "./pages/SalesGraphPage";
 import TopProductsPage from "./pages/TopProductsPage";
 import CartPage from "./pages/CartPage";
 import Login from "./components/Login";
+import SignUp from "./components/SignUp"; // Import SignUp component
 import ForgotPassword from "./components/ForgotPassword";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -46,6 +47,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} /> {/* Add SignUp Route */}
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route
             path="/*"
