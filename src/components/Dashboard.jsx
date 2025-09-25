@@ -1,21 +1,27 @@
 import React from "react";
-import { Search } from "lucide-react";
+import { SearchBar } from "./SearchBar";
+// import TopProducts from "./TopProducts";
+// import ShipmentSummary from "./ShipmentSummary";
+// import DonutChart from "./DonutChart";
+// import ItemsShipped from "./ItemsShipped";
+// import LevelComparison from "./LevelComparison";
+// import SalesGraph from "./SalesGraph";
 
 function Dashboard() {
   return (
     <div
-      className="min-h-screen bg-cover bg-center"
+      className="min-h-screen bg-cover bg-center bg-fixed"
       style={{
         backgroundImage:
-          "url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJhLG_4XbprkRrzzAJBzcWn50EOLobkOGPvQ&s')",
+          "url('https://images.unsplash.com/photo-1556740758-90de374c12ad?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')",
       }}
     >
-      <div className="backdrop-blur-sm bg-white/70 min-h-screen p-8">
-        <header className="mb-10 relative">
+      <div className="backdrop-blur-xs bg-black/20 min-h-screen p-4 md:p-8">
+        <header className="mb-8 md:mb-12 relative">
           {/* Today's Shipment (Top Right) */}
-          <div className="absolute top-0 right-0 bg-blue-500 text-white px-4 py-2 rounded-bl-xl shadow-md">
-            <h2 className="text-lg font-semibold">Today's Shipment</h2>
-            <div className="text-xs opacity-90">
+          <div className="absolute top-0 right-0 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-bl-2xl rounded-tr-2xl shadow-2xl transform hover:scale-105 transition-transform duration-300">
+            <h2 className="text-lg font-bold">Today's Shipment</h2>
+            <div className="text-sm opacity-95 font-medium">
               {new Date().toLocaleDateString("en-US", {
                 weekday: "long",
                 year: "numeric",
@@ -26,34 +32,27 @@ function Dashboard() {
           </div>
 
           {/* Title Centered */}
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-6 tracking-tight text-center">
-            iShop4U
-          </h1>
+          <div className="pt-16 md:pt-20">
+            <h1 className="text-5xl md:text-6xl font-black text-white mb-4 tracking-tighter text-center drop-shadow-2xl">
+              iShop<span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">4U</span>
+            </h1>
+            <p className="text-lg text-white/90 text-center max-w-2xl mx-auto font-light mb-8 drop-shadow-lg">
+              Discover amazing products with our intelligent search platform
+            </p>
+          </div>
 
           {/* Search Bar */}
-          <div className="flex justify-center">
-            <div className="relative w-full max-w-md">
-              <Search
-                className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                size={20}
-              />
-              <input
-                type="text"
-                placeholder="Search products, brands, categories..."
-                className="w-full pl-12 pr-4 py-3 rounded-full bg-white/60 border border-gray-200 shadow-sm 
-                           focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all duration-200"
-              />
+          <div className="flex justify-center px-4">
+            <div className="w-full max-w-4xl">
+              <SearchBar />
             </div>
           </div>
         </header>
+
+        
       </div>
     </div>
   );
 }
 
 export default Dashboard;
-
-
-
-
-

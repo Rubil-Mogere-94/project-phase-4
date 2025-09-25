@@ -1,37 +1,32 @@
-import React, { useState } from 'react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart } from 'recharts'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart } from 'recharts';
 
 const SalesGraph = () => {
-  const [timeRange, setTimeRange] = useState('month')
+  const [timeRange, setTimeRange] = useState('month');
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const monthlyData = [
-    { name: 'Jan', sales: 4000, revenue: 2400, orders: 240 },
-    { name: 'Feb', sales: 3000, revenue: 1398, orders: 221 },
-    { name: 'Mar', sales: 2000, revenue: 9800, orders: 229 },
-    { name: 'Apr', sales: 2780, revenue: 3908, orders: 200 },
-    { name: 'May', sales: 1890, revenue: 4800, orders: 218 },
-    { name: 'Jun', sales: 2390, revenue: 3800, orders: 250 },
-    { name: 'Jul', sales: 3490, revenue: 4300, orders: 210 },
-  ]
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await axios.get(`http://127.0.0.1:5000/api/sales_performance?time_range=${timeRange}`);
+        setData(response.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const weeklyData = [
-    { name: 'Week 1', sales: 1200, revenue: 800, orders: 85 },
-    { name: 'Week 2', sales: 1900, revenue: 1200, orders: 92 },
-    { name: 'Week 3', sales: 1600, revenue: 950, orders: 78 },
-    { name: 'Week 4', sales: 2100, revenue: 1400, orders: 105 },
-  ]
+    fetchData();
+  }, [timeRange]);
 
-  const dailyData = [
-    { name: 'Mon', sales: 400, revenue: 240, orders: 24 },
-    { name: 'Tue', sales: 300, revenue: 139, orders: 22 },
-    { name: 'Wed', sales: 200, revenue: 980, orders: 29 },
-    { name: 'Thu', sales: 278, revenue: 390, orders: 20 },
-    { name: 'Fri', sales: 189, revenue: 480, orders: 18 },
-    { name: 'Sat', sales: 239, revenue: 380, orders: 25 },
-    { name: 'Sun', sales: 349, revenue: 430, orders: 21 },
-  ]
-
-  const data = timeRange === 'day' ? dailyData : timeRange === 'week' ? weeklyData : monthlyData
+  if (loading) return <p>Loading graph data...</p>;
+  if (error) return <p>Error fetching graph data: {error}</p>;
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
@@ -44,10 +39,10 @@ const SalesGraph = () => {
             </p>
           ))}
         </div>
-      )
+      );
     }
-    return null
-  }
+    return null;
+  };
 
   return (
     <div className="card bg-base-100 shadow-xl">
@@ -82,7 +77,7 @@ const SalesGraph = () => {
           </div>
         </div>
 
-        <div className="chart-container">
+        <div className="chart-container" style={{ height: '350px' }}>
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
               data={data}
@@ -162,7 +157,7 @@ const SalesGraph = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SalesGraph
+export default SalesGraph;

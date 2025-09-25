@@ -20,12 +20,14 @@ const Sidebar = () => {
 
   const navItems = [
     { name: "Dashboard", icon: <User size={20} />, path: "/" },
-    { name: "Top Products", icon: <Package size={20} />, path: "/products" },
+    { name: "All Products", icon: <Package size={20} />, path: "/products" },
+    { name: "Top Products", icon: <Trophy size={20} />, path: "/top-products" }, // New Top Products link
     { name: "Shipment Summary", icon: <ShoppingBag size={20} />, path: "/shipments" },
     { name: "Items Shipped", icon: <BarChart2 size={20} />, path: "/items-shipped" },
     { name: "Level Comparison", icon: <Trophy size={20} />, path: "/level-comparison" },
     { name: "Donut Chart", icon: <Heart size={20} />, path: "/donut-chart" },
     { name: "Sales Graph", icon: <MessageSquare size={20} />, path: "/sales-graph" },
+    { name: "Cart", icon: <ShoppingBag size={20} />, path: "/cart" },
   ];
 
   return (

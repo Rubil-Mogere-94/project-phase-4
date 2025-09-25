@@ -1,18 +1,36 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import { useCart } from '../contexts/CartContext'
 
 const TopProducts = () => {
-  const products = [
-    { id: 'O1', name: 'Nome Decore Range', popularity: '', shipment: '46%' },
-    { id: 'O2', name: 'Disney Princess Dress', popularity: '', shipment: '17%' },
-    { id: 'O3', name: 'Bathroom Essentials', popularity: '', shipment: '18%' },
-    { id: 'O4', name: 'Apple Smartwatch', popularity: '', shipment: '28%' }
-  ]
+  const [topProducts, setTopProducts] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const { addToCart } = useCart()
 
-  const getShipmentColor = (percentage) => {
-    if (percentage >= 40) return 'bg-primary text-primary-content'
-    if (percentage >= 20) return 'bg-secondary text-secondary-content'
-    return 'bg-accent text-accent-content'
-  }
+  useEffect(() => {
+    const fetchTopProducts = async () => {
+      setLoading(true)
+      setError(null)
+      try {
+        const response = await axios.get('http://127.0.0.1:5000/api/top_products')
+        setTopProducts(response.data)
+      } catch (err) {
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchTopProducts()
+  }, [])
+
+  if (loading) return <p>Loading top products...</p>
+  if (error) return <p>Error fetching top products: {error}</p>
+
+  const isValidImageUrl = (url) => {
+    return url && (url.startsWith("http://") || url.startsWith("https://"));
+  };
 
   return (
     <div className="card bg-base-100 shadow-xl h-full">
@@ -23,31 +41,33 @@ const TopProducts = () => {
           <table className="table table-zebra w-full">
             <thead>
               <tr>
-                <th className="bg-base-200">#</th>
+                <th className="bg-base-200">Image</th>
                 <th className="bg-base-200">Name</th>
-                <th className="bg-base-200">Popularity</th>
-                <th className="bg-base-200">Shipment</th>
+                <th className="bg-base-200">Price</th>
+                <th className="bg-base-200">Source</th>
+                <th className="bg-base-200">Action</th>
               </tr>
             </thead>
             <tbody>
-              {products.map((product) => (
+              {topProducts.map((product) => (
                 <tr key={product.id} className="hover:bg-base-200 transition-colors">
-                  <td className="font-semibold">{product.id}</td>
-                  <td>{product.name}</td>
                   <td>
-                    <div className="flex items-center">
-                      <div className="w-full bg-gray-200 rounded-full h-2">
-                        <div 
-                          className="bg-yellow-400 h-2 rounded-full" 
-                          style={{ width: `${parseInt(product.shipment) + 20}%` }}
-                        ></div>
-                      </div>
-                    </div>
+                    <img 
+                      src={isValidImageUrl(product.image) ? product.image : "https://via.placeholder.com/50"} 
+                      alt={product.title}
+                      className="w-12 h-12 object-cover rounded"
+                    />
                   </td>
+                  <td>{product.title}</td>
+                  <td>${product.price.toFixed(2)}</td>
+                  <td>{product.source}</td>
                   <td>
-                    <span className={`badge badge-lg ${getShipmentColor(parseInt(product.shipment))}`}>
-                      {product.shipment}
-                    </span>
+                    <button 
+                      onClick={() => addToCart(product)}
+                      className="btn btn-sm btn-primary"
+                    >
+                      Add to Cart
+                    </button>
                   </td>
                 </tr>
               ))}

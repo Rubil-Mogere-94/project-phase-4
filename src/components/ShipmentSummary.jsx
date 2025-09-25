@@ -1,37 +1,62 @@
-import React from 'react'
-import { TrendingUp, Package, ShoppingCart, Gift } from 'lucide-react'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { TrendingUp, Package, ShoppingCart, Gift } from 'lucide-react';
 
 const ShipmentSummary = () => {
-  const stats = [
+  const [summary, setSummary] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchSummary = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const response = await axios.get('http://127.0.0.1:5000/api/shipment_summary');
+        setSummary(response.data);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSummary();
+  }, []);
+
+  if (loading) return <p>Loading summary...</p>;
+  if (error) return <p>Error fetching summary: {error}</p>;
+
+  const stats = summary ? [
     {
       icon: Package,
-      value: '$5k',
+      value: summary.total_shipment,
       label: 'Total shipment',
       change: '+10% from yesterday',
       color: 'text-blue-600'
     },
     {
       icon: ShoppingCart,
-      value: '500',
+      value: summary.total_order,
       label: 'Total Order',
       change: '+3% from yesterday',
       color: 'text-green-600'
     },
     {
       icon: Gift,
-      value: '9',
+      value: summary.product_shipped,
       label: 'Product Shipped',
       change: '+2% from yesterday',
       color: 'text-purple-600'
     },
     {
       icon: TrendingUp,
-      value: '12',
+      value: summary.new_goods,
       label: 'New Goods',
       change: '+3% from yesterday',
       color: 'text-orange-600'
     }
-  ]
+  ] : [];
 
   return (
     <div className="card bg-base-100 shadow-xl">
@@ -55,7 +80,7 @@ const ShipmentSummary = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ShipmentSummary
+export default ShipmentSummary;
