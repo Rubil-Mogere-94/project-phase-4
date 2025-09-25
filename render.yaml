@@ -1,11 +1,10 @@
 services:
   - type: web
     name: ishop4u-backend
-    rootDir: backend
     env: python
     plan: free
-    buildCommand: "pip install -r backend/requirements.txt"
-    startCommand: "gunicorn backend.app:app"
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app"
     healthCheckPath: "/"
     envVars:
       - key: DATABASE_URL
