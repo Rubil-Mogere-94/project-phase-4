@@ -1,11 +1,13 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useCart } from "../contexts/CartContext";
 import debounce from 'lodash/debounce';
+import { useNavigate } from 'react-router-dom';
 
 const CartPage = () => {
   const { cartItems, updateCartItemQuantity, updateCartItemNotes, removeFromCart } = useCart();
   const [localNotes, setLocalNotes] = useState({});
   const [copied, setCopied] = useState(false);
+  const navigate = useNavigate();
 
   // Initialize local notes when cart items change
   useEffect(() => {
@@ -276,25 +278,15 @@ const CartPage = () => {
               </div>
 
               {/* Bulk Actions */}
-              <div className="mt-6 space-y-3">
+              <div className="mt-6">
                 <button
-                  onClick={handleOpenAllInTabs}
-                  className="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition duration-200 font-medium flex items-center justify-center"
+                  onClick={() => navigate('/checkout')}
+                  className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition duration-200 font-medium flex items-center justify-center"
                 >
                   <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  Open All in Tabs
-                </button>
-                
-                <button
-                  onClick={handleCopyCheckoutList}
-                  className="w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 transition duration-200 font-medium flex items-center justify-center"
-                >
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
-                  {copied ? 'Copied!' : 'Copy Checkout Links'}
+                  Proceed to Checkout
                 </button>
               </div>
 

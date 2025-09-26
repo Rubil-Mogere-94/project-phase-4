@@ -11,6 +11,8 @@ import DonutChartPage from "./pages/DonutChartPage";
 import SalesGraphPage from "./pages/SalesGraphPage";
 import TopProductsPage from "./pages/TopProductsPage";
 import CartPage from "./pages/CartPage";
+import CheckoutPage from "./pages/CheckoutPage";
+import OrderConfirmationPage from "./pages/OrderConfirmationPage";
 import Login from "./components/Login";
 import SignUp from "./components/SignUp"; // Import SignUp component
 import ForgotPassword from "./components/ForgotPassword";
@@ -34,6 +36,8 @@ function AuthenticatedApp() {
           <Route path="/sales-graph" element={<SalesGraphPage />} />
           <Route path="/top-products" element={<TopProductsPage />} />
           <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/order-confirmation" element={<OrderConfirmationPage />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </div>

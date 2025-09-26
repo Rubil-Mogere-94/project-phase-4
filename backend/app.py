@@ -45,6 +45,31 @@ class CartItem(db.Model):
     def __repr__(self):
         return f'<CartItem {self.id} - User {self.user_id} - Product {self.product_id}>'
 
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.String(100), nullable=False)
+    total_amount = db.Column(db.Float, nullable=False)
+    order_date = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
+    status = db.Column(db.String(50), nullable=False, default='Pending') # e.g., Pending, Completed, Cancelled
+    shipping_address = db.Column(db.Text, nullable=True)
+
+    order_items = db.relationship('OrderItem', backref='order', lazy=True)
+
+    def __repr__(self):
+        return f'<Order {self.id} - User {self.user_id} - Total {self.total_amount}>'
+
+class OrderItem(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)
+    product_id = db.Column(db.String(100), nullable=False) # Store product ID directly
+    product_title = db.Column(db.String(255), nullable=False) # Store title at time of order
+    product_price = db.Column(db.Float, nullable=False) # Store price at time of order
+    quantity = db.Column(db.Integer, nullable=False)
+    notes = db.Column(db.Text, nullable=True)
+
+    def __repr__(self):
+        return f'<OrderItem {self.id} - Order {self.order_id} - Product {self.product_title}>'
+
 # Create database tables if they don't exist
 with app.app_context():
     db.create_all()
@@ -363,5 +388,78 @@ def delete_cart_item(item_id):
     db.session.delete(cart_item)
     db.session.commit()
     return jsonify({"message": "Cart item removed"})
+
+@app.route('/api/checkout', methods=['POST'])
+def checkout():
+    data = request.get_json()
+    user_id = data.get('user_id')
+    shipping_address = data.get('shipping_address')
+
+    if not user_id:
+        return jsonify({"error": "User ID is required."}), 400
+    if not shipping_address:
+        return jsonify({"error": "Shipping address is required."}), 400
+
+    cart_items = CartItem.query.filter_by(user_id=user_id).all()
+    if not cart_items:
+        return jsonify({"error": "Cart is empty."}), 400
+
+    total_amount = 0
+    for item in cart_items:
+        total_amount += item.product.price * item.quantity
+
+    try:
+        # Create new order
+        new_order = Order(user_id=user_id, total_amount=total_amount, shipping_address=shipping_address)
+        db.session.add(new_order)
+        db.session.flush() # To get new_order.id before committing
+
+        # Create order items from cart items
+        for item in cart_items:
+            order_item = OrderItem(
+                order_id=new_order.id,
+                product_id=item.product.id,
+                product_title=item.product.title,
+                product_price=item.product.price,
+                quantity=item.quantity,
+                notes=item.notes
+            )
+            db.session.add(order_item)
+            
+            # Optionally, you might want to decrement product stock here if you had a stock system
+
+        # Clear the user's cart
+        for item in cart_items:
+            db.session.delete(item)
+
+        db.session.commit()
+
+        return jsonify({
+            "message": "Order placed successfully!",
+            "order_id": new_order.id,
+            "total_amount": new_order.total_amount,
+            "order_date": new_order.order_date.isoformat(),
+            "status": new_order.status
+        }), 201
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error during checkout: {e}")
+        return jsonify({"error": "An error occurred during checkout."}), 500
+
+@app.route('/api/cart/clear', methods=['DELETE'])
+def clear_user_cart():
+    user_id = request.args.get('user_id')
+    if not user_id:
+        return jsonify({"error": "User ID is required."}), 400
+
+    try:
+        CartItem.query.filter_by(user_id=user_id).delete()
+        db.session.commit()
+        return jsonify({"message": f"Cart for user {user_id} cleared successfully."}), 200
+    except Exception as e:
+        db.session.rollback()
+        print(f"Error clearing cart: {e}")
+        return jsonify({"error": "An error occurred while clearing the cart."}), 500
 
 

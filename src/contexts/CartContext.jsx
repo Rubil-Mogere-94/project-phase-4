@@ -98,10 +98,20 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  const clearCart = async () => {
-    // This would require a new backend endpoint to clear all items for a user
-    // For now, we can just remove items one by one or implement a new endpoint later
-    console.warn("Clear cart functionality not fully implemented yet.");
+  const clearCart = async (userId) => {
+    if (!userId) {
+      console.error("User ID is required to clear cart.");
+      return;
+    }
+    try {
+      const response = await axios.delete(`${import.meta.env.VITE_API_URL}/api/cart/clear?user_id=${userId}`);
+      if (response.status === 200) {
+        setCartItems([]); // Optimistically clear frontend cart
+        console.log("Cart cleared successfully.");
+      }
+    } catch (error) {
+      console.error("Error clearing cart:", error);
+    }
   };
 
   const value = {
@@ -111,6 +121,7 @@ export const CartProvider = ({ children }) => {
     updateCartItemNotes,
     removeFromCart,
     clearCart,
+    fetchCart, // Expose fetchCart so CheckoutPage can use it
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
